@@ -38,11 +38,11 @@ def distance(lat1, lon1, lat2, lon2):
 app = FastAPI()
 
 # health check
-@app.get("/")
+@app.get("//")
 async def root():
       return {"message": "By AILab - Oraichain Labs"}
 # tìm đường xung quanh 1 địa điểm lat,long
-@app.get("/findway")
+@app.get("//findway")
 async def findway(lat: float, lon: float):
       location = [lat,lon]
       overpass_url = "http://overpass-api.de/api/interpreter"
