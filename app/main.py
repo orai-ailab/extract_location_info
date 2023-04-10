@@ -1,5 +1,5 @@
 # FastAPI
-from fastapi import FastAPI
+from fastapi import FastAPI,Form
 import requests
 import math
 import threading
@@ -112,8 +112,8 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
       return data['elements']
 
 
-@app.get("//findwayv2")
-async def findwayv2(lat: float, lon: float,google_api_key: str):
+@app.post("//findwayv2")
+async def findwayv2(lat: float = Form(), lon: float = Form() ,google_api_key: str = Form()):
       # tìm 3 con gần nhất đường xung quanh 1 địa điểm lat,long và khoảng cách đến con đường đó
       location = [lat,lon]
       overpass_url = "http://overpass-api.de/api/interpreter"
