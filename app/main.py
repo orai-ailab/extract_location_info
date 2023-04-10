@@ -1,9 +1,6 @@
 # FastAPI
 from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import requests
-import json
 import math
 from dotenv import load_dotenv
 import os
@@ -118,6 +115,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                               params={'data': overpass_query})
       data = response.json()
       return data['elements']
+
 
 @app.get("//findwayv2")
 async def findwayv2(lat: float, lon: float):
