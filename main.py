@@ -80,4 +80,7 @@ async def findway(lat: float, lon: float):
             frame = ({'name' : i[0], 'length_way' : i[1], 'distance' : i[2], 'detail' : i[3]})
             json_result.append(frame)
       return json_result
+
+
+
       
