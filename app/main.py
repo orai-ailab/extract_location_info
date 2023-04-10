@@ -2,12 +2,7 @@
 from fastapi import FastAPI
 import requests
 import math
-from dotenv import load_dotenv
-import os
 import threading
-load_dotenv()
-
-API_KEY_GOOGLE = os.getenv('API_KEY_GOOGLE')
 
 def extract_way(test_data_way, location, data_node):
       tags = test_data_way['tags']
@@ -37,12 +32,12 @@ def distance(lat1, lon1, lat2, lon2):
             d = R * c
             return d*1000
 
-def direction_google_map(lat,lon,destination):
+def direction_google_map(lat,lon,destination,google_api_key):
       origin = f"{lat},{lon}" # Vị trí xuất phát
       mode = "walking" # Chế độ đi bộ
       
 
-      url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination['name']}&mode={mode}&key={API_KEY_GOOGLE}"
+      url = f"https://maps.googleapis.com/maps/api/directions/json?origin={origin}&destination={destination['name']}&mode={mode}&key={google_api_key}"
       response = requests.get(url)
 
       data = response.json()
@@ -118,7 +113,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
 
 
 @app.get("//findwayv2")
-async def findwayv2(lat: float, lon: float):
+async def findwayv2(lat: float, lon: float,google_api_key: str):
       # tìm 3 con gần nhất đường xung quanh 1 địa điểm lat,long và khoảng cách đến con đường đó
       location = [lat,lon]
       overpass_url = "http://overpass-api.de/api/interpreter"
@@ -159,7 +154,7 @@ async def findwayv2(lat: float, lon: float):
       # create 3 thread to find direction
       threads = []
       for i in data:
-            t = threading.Thread(target=direction_google_map, args=(lat,lon,i))
+            t = threading.Thread(target=direction_google_map, args=(lat,lon,i,google_api_key))
             threads.append(t)
             t.start()
       # wait for all threads to finish print result of thread
