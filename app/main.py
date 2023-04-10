@@ -105,12 +105,12 @@ async def findway(lat: float, lon: float, distance: int):
 @app.get("//findpublicfacilities")
 async def findpublicfacilities(lat: float, lon: float, distance: int):
       overpass_url = "http://overpass-api.de/api/interpreter"
-      overpass_query = """
+      overpass_query = f"""
       [out:json];
       (
-      node["amenity"=""](around:2000,20.990063,105.813204);
-      way["amenity"=""](around:2000,20.990063,105.813204);
-      rel["amenity"=""](around:2000,20.990063,105.813204);
+      node["amenity"=""](around:{distance},{lat},{lon});
+      way["amenity"=""](around:{distance},{lat},{lon});
+      rel["amenity"=""](around:{distance},{lat},{lon});
       );
       out center;
       """
