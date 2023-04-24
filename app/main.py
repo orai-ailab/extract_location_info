@@ -122,10 +122,10 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
             return data_json
@@ -144,7 +144,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         pass
             return data_json
@@ -165,10 +165,10 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
             return data
@@ -189,10 +189,10 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
             return data_json
@@ -213,10 +213,10 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
             return data_json
@@ -238,10 +238,10 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
             return data_json
@@ -262,14 +262,15 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
             return data_json
       return police(lat,lon,distance)
+
 
 
 
