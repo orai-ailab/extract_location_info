@@ -4,6 +4,9 @@ import requests
 import math
 import threading
 
+
+
+
 def extract_way(test_data_way, location, data_node):
       tags = test_data_way['tags']
       nodes = test_data_way['nodes']
@@ -96,20 +99,178 @@ async def findway(lat: float, lon: float, distance: int):
 
 @app.get("//findpublicfacilities")
 async def findpublicfacilities(lat: float, lon: float, distance: int):
-      overpass_url = "http://overpass-api.de/api/interpreter"
-      overpass_query = f"""
-      [out:json];
-      (
-      node["amenity"=""](around:{distance},{lat},{lon});
-      way["amenity"=""](around:{distance},{lat},{lon});
-      rel["amenity"=""](around:{distance},{lat},{lon});
-      );
-      out center;
-      """
-      response = requests.get(overpass_url, 
-                              params={'data': overpass_query})
-      data = response.json()
-      return data['elements']
+      def school(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["amenity"="school"](around:{distance},{lat},{lon});
+            way["amenity"="school"](around:{distance},{lat},{lon});
+            rel["amenity"="school"](around:{distance},{lat},{lon});
+            node["amenity"="kindergarten"](around:{distance},{lat},{lon});
+            way["amenity"="kindergarten"](around:{distance},{lat},{lon});
+            rel["amenity"="kindergarten"](around:{distance},{lat},{lon});
+            node["amenity"="university"](around:{distance},{lat},{lon});
+            way["amenity"="university"](around:{distance},{lat},{lon});
+            rel["amenity"="university"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url, 
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        try:
+                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                        except:
+                              pass
+            return data_json
+      def bus_station(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["highway"="bus_stop"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url, 
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        pass
+            return data_json
+      def market(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["amenity"="marketplace"](around:{distance},{lat},{lon});
+            way["amenity"="marketplace"](around:{distance},{lat},{lon});
+            rel["amenity"="marketplace"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url, 
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        try:
+                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                        except:
+                              pass
+            return data
+      def super_market(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["shop"="supermarket"](around:{distance},{lat},{lon});
+            way["shop"="supermarket"](around:{distance},{lat},{lon});
+            rel["shop"="supermarket"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url,
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        try:
+                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                        except:
+                              pass
+            return data_json
+      def lake(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["natural"="water"](around:{distance},{lat},{lon});
+            way["natural"="water"](around:{distance},{lat},{lon});
+            rel["natural"="water"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url,
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        try:
+                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                        except:
+                              pass
+            return data_json
+      
+      def park(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["leisure"="park"](around:{distance},{lat},{lon});
+            way["leisure"="park"](around:{distance},{lat},{lon});
+            rel["leisure"="park"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url,
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        try:
+                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                        except:
+                              pass
+            return data_json
+      def police(lat,lon,distance):
+            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_query = f"""
+            [out:json];
+            (
+            node["amenity"="police"](around:{distance},{lat},{lon});
+            way["amenity"="police"](around:{distance},{lat},{lon});
+            rel["amenity"="police"](around:{distance},{lat},{lon});
+            );
+            out center;
+            """
+            response = requests.get(overpass_url, 
+                                    params={'data': overpass_query})
+            data = response.json()
+            data_json = []
+            for name in data['elements']:
+                  try:
+                        data_json.append({'name' : name['tags']['name'],'lat' : name['lat'],'lon' : name['lon']})
+                  except:
+                        try:
+                              data_json.append({'name' : name['tags']['name'],'lat' : name['center']['lat'],'lon' : name['center']['lon']})
+                        except:
+                              pass
+            return data_json
+      return police(lat,lon,distance)
+
 
 
 @app.post("//findwayv2")
@@ -150,9 +311,9 @@ async def findwayv2(lat: float = Form(), lon: float = Form() ,google_api_key: st
             
             frame = ({'name' : i[0], 'length_way' : i[1], 'distance' : i[2], 'detail' : i[3]})
             json_result.append(frame)
-      data = json_result[0:3]
+      data = json_result[0:4]
       # create 3 thread to find direction
-      threads = []
+      threads = [] 
       for i in data:
             t = threading.Thread(target=direction_google_map, args=(lat,lon,i,google_api_key))
             threads.append(t)
@@ -161,4 +322,6 @@ async def findwayv2(lat: float = Form(), lon: float = Form() ,google_api_key: st
       for t in threads:
             t.join()
       return data
+
+
       
