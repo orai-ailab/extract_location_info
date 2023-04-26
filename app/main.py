@@ -60,7 +60,7 @@ async def root():
 @app.get("//findway")
 async def findway(lat: float, lon: float, distance: int):
       location = [lat,lon]
-      overpass_url = "http://overpass-api.de/api/interpreter"
+      overpass_url = "http://65.109.112.52/api/interpreter"
       overpass_query = f"""
       [out:json];
       way(around:{distance}, """+str(lat)+","+str(lon)+""")["highway"];
@@ -100,7 +100,7 @@ async def findway(lat: float, lon: float, distance: int):
 @app.get("//findpublicfacilities")
 async def findpublicfacilities(lat: float, lon: float, distance: int):
       def school(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -130,7 +130,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                               pass
             return {'type': 'school','result' : data_json}
       def bus_stop(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -149,7 +149,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                         pass
             return {'type': 'busStop','result' : data_json}
       def market(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -173,7 +173,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                               pass
             return {'type': 'market','result' : data_json}
       def super_market(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -197,7 +197,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                               pass
             return {'type': 'superMarket','result' : data_json}
       def lake(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -222,7 +222,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             return {'type': 'lake','result' : data_json}
       
       def park(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -246,7 +246,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                               pass
             return {'type': 'park','result' : data_json}
       def police(lat,lon,distance):
-            overpass_url = "http://overpass-api.de/api/interpreter"
+            overpass_url = "http://65.109.112.52/api/interpreter"
             overpass_query = f"""
             [out:json];
             (
@@ -283,7 +283,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
 async def findwayv2(lat: float = Form(), lon: float = Form() ,google_api_key: str = Form()):
       # tìm 3 con gần nhất đường xung quanh 1 địa điểm lat,long và khoảng cách đến con đường đó
       location = [lat,lon]
-      overpass_url = "http://overpass-api.de/api/interpreter"
+      overpass_url = "http://65.109.112.52/api/interpreter"
       overpass_query = f"""
       [out:json];
       way(around:1000, """+str(lat)+","+str(lon)+""")["highway"];
