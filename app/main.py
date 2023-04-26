@@ -99,181 +99,53 @@ async def findway(lat: float, lon: float, distance: int):
 
 @app.get("//findpublicfacilities")
 async def findpublicfacilities(lat: float, lon: float, distance: int):
-      def school(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["amenity"="school"](around:{distance},{lat},{lon});
-            way["amenity"="school"](around:{distance},{lat},{lon});
-            rel["amenity"="school"](around:{distance},{lat},{lon});
-            node["amenity"="kindergarten"](around:{distance},{lat},{lon});
-            way["amenity"="kindergarten"](around:{distance},{lat},{lon});
-            rel["amenity"="kindergarten"](around:{distance},{lat},{lon});
-            node["amenity"="university"](around:{distance},{lat},{lon});
-            way["amenity"="university"](around:{distance},{lat},{lon});
-            rel["amenity"="university"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url, 
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
+      
+      overpass_url = "http://65.109.112.52/api/interpreter"
+      overpass_query = f"""
+      [out:json];
+      (
+      node["amenity"="school"](around:{distance},{lat},{lon});
+      way["amenity"="school"](around:{distance},{lat},{lon});
+      rel["amenity"="school"](around:{distance},{lat},{lon});
+      node["amenity"="kindergarten"](around:{distance},{lat},{lon});
+      way["amenity"="kindergarten"](around:{distance},{lat},{lon});
+      rel["amenity"="kindergarten"](around:{distance},{lat},{lon});
+      node["amenity"="university"](around:{distance},{lat},{lon});
+      way["amenity"="university"](around:{distance},{lat},{lon});
+      rel["amenity"="university"](around:{distance},{lat},{lon});
+      node["highway"="bus_stop"](around:{distance},{lat},{lon});
+      node["amenity"="marketplace"](around:{distance},{lat},{lon});
+      way["amenity"="marketplace"](around:{distance},{lat},{lon});
+      rel["amenity"="marketplace"](around:{distance},{lat},{lon});
+      node["shop"="supermarket"](around:{distance},{lat},{lon});
+      way["shop"="supermarket"](around:{distance},{lat},{lon});
+      rel["shop"="supermarket"](around:{distance},{lat},{lon});
+      node["natural"="water"](around:{distance},{lat},{lon});
+      way["natural"="water"](around:{distance},{lat},{lon});
+      rel["natural"="water"](around:{distance},{lat},{lon});
+      node["leisure"="park"](around:{distance},{lat},{lon});
+      way["leisure"="park"](around:{distance},{lat},{lon});
+      rel["leisure"="park"](around:{distance},{lat},{lon});
+      node["amenity"="police"](around:{distance},{lat},{lon});
+      way["amenity"="police"](around:{distance},{lat},{lon});
+      rel["amenity"="police"](around:{distance},{lat},{lon});
+      );
+      out center;
+      """
+      response = requests.get(overpass_url, 
+                              params={'data': overpass_query})
+      data = response.json()
+      data_json = []
+      for name in data['elements']:
+            try:
+                  data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon']),'type' : name['tags']['amenity']})
+            except:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
-                  except:
-                        try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
-                        except:
-                              pass
-            return {'type': 'school','result' : data_json}
-      def bus_stop(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["highway"="bus_stop"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url, 
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon']), 'type' : name['tags']['shop']})
                   except:
                         pass
-            return {'type': 'busStop','result' : data_json}
-      def market(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["amenity"="marketplace"](around:{distance},{lat},{lon});
-            way["amenity"="marketplace"](around:{distance},{lat},{lon});
-            rel["amenity"="marketplace"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url, 
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
-                  except:
-                        try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
-                        except:
-                              pass
-            return {'type': 'market','result' : data_json}
-      def super_market(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["shop"="supermarket"](around:{distance},{lat},{lon});
-            way["shop"="supermarket"](around:{distance},{lat},{lon});
-            rel["shop"="supermarket"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
-                  except:
-                        try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
-                        except:
-                              pass
-            return {'type': 'superMarket','result' : data_json}
-      def lake(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["natural"="water"](around:{distance},{lat},{lon});
-            way["natural"="water"](around:{distance},{lat},{lon});
-            rel["natural"="water"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
-                  except:
-                        try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
-                        except:
-                              pass
-            return {'type': 'lake','result' : data_json}
+      return data
       
-      def park(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["leisure"="park"](around:{distance},{lat},{lon});
-            way["leisure"="park"](around:{distance},{lat},{lon});
-            rel["leisure"="park"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url,
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
-                  except:
-                        try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
-                        except:
-                              pass
-            return {'type': 'park','result' : data_json}
-      def police(lat,lon,distance):
-            overpass_url = "http://65.109.112.52/api/interpreter"
-            overpass_query = f"""
-            [out:json];
-            (
-            node["amenity"="police"](around:{distance},{lat},{lon});
-            way["amenity"="police"](around:{distance},{lat},{lon});
-            rel["amenity"="police"](around:{distance},{lat},{lon});
-            );
-            out center;
-            """
-            response = requests.get(overpass_url, 
-                                    params={'data': overpass_query})
-            data = response.json()
-            data_json = []
-            for name in data['elements']:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
-                  except:
-                        try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
-                        except:
-                              pass
-            return {'type': 'police','result' : data_json}
-      
-      # call all function thread and merge result
-      
-      return [school(lat,lon,distance),market(lat,lon,distance),super_market(lat,lon,distance),
-              lake(lat,lon,distance),park(lat,lon,distance),police(lat,lon,distance),bus_stop(lat,lon,distance)]
 
       
 
