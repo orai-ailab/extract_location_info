@@ -17,14 +17,14 @@ def extract_way(test_data_way, location, data_node):
             lat_lon.append([frame[0]['lat'], frame[0]['lon']])
       sum = 0
       for i in range(len(lat_lon)-1):
-            sum += distance(lat_lon[i][0], lat_lon[i][1], lat_lon[i+1][0], lat_lon[i+1][1])
-      min = distance(location[0], location[1], lat_lon[0][0], lat_lon[0][1])
+            sum += calculator_distance(lat_lon[i][0], lat_lon[i][1], lat_lon[i+1][0], lat_lon[i+1][1])
+      min = calculator_distance(location[0], location[1], lat_lon[0][0], lat_lon[0][1])
       for i in range(len(lat_lon)):
-            if min > distance(location[0], location[1], lat_lon[i][0], lat_lon[i][1]):
-                  min = distance(location[0], location[1], lat_lon[i][0], lat_lon[i][1])
+            if min > calculator_distance(location[0], location[1], lat_lon[i][0], lat_lon[i][1]):
+                  min = calculator_distance(location[0], location[1], lat_lon[i][0], lat_lon[i][1])
       return [name, int(sum), int(min),tags]
 
-def distance(lat1, lon1, lat2, lon2):
+def calculator_distance(lat1, lon1, lat2, lon2):
             R = 6371
             dLat = (lat2-lat1) * math.pi / 180
             dLon = (lon2-lon1) * math.pi / 180
@@ -122,14 +122,14 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
+                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
-            return data_json
-      def bus_station(lat,lon,distance):
+            return {'type': 'school','result' : data_json}
+      def bus_stop(lat,lon,distance):
             overpass_url = "http://overpass-api.de/api/interpreter"
             overpass_query = f"""
             [out:json];
@@ -144,10 +144,10 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         pass
-            return data_json
+            return {'type': 'busStop','result' : data_json}
       def market(lat,lon,distance):
             overpass_url = "http://overpass-api.de/api/interpreter"
             overpass_query = f"""
@@ -165,13 +165,13 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
+                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
-            return data
+            return {'type': 'market','result' : data_json}
       def super_market(lat,lon,distance):
             overpass_url = "http://overpass-api.de/api/interpreter"
             overpass_query = f"""
@@ -189,13 +189,13 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
+                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
-            return data_json
+            return {'type': 'superMarket','result' : data_json}
       def lake(lat,lon,distance):
             overpass_url = "http://overpass-api.de/api/interpreter"
             overpass_query = f"""
@@ -213,13 +213,13 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
+                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
-            return data_json
+            return {'type': 'lake','result' : data_json}
       
       def park(lat,lon,distance):
             overpass_url = "http://overpass-api.de/api/interpreter"
@@ -238,13 +238,13 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
+                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
-            return data_json
+            return {'type': 'park','result' : data_json}
       def police(lat,lon,distance):
             overpass_url = "http://overpass-api.de/api/interpreter"
             overpass_query = f"""
@@ -262,15 +262,20 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
             data_json = []
             for name in data['elements']:
                   try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['lat'],name['lon'])})
+                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon'])})
                   except:
                         try:
-                              data_json.append({'name' : name['tags']['name'],'distance' : distance(lat,lon,name['center']['lat'],name['center']['lon'])})
+                              data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon'])})
                         except:
                               pass
-            return data_json
-      return police(lat,lon,distance)
+            return {'type': 'police','result' : data_json}
+      
+      # call all function thread and merge result
+      
+      return [school(lat,lon,distance),market(lat,lon,distance),super_market(lat,lon,distance),
+              lake(lat,lon,distance),park(lat,lon,distance),police(lat,lon,distance),bus_stop(lat,lon,distance)]
 
+      
 
 
 
