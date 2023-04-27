@@ -49,6 +49,83 @@ def direction_google_map(lat,lon,destination,google_api_key):
       destination.update({'distance_walking' : distance_m})
       return destination
 
+def fillter_json(data,lat,lon):
+      json_result = []
+      for i in data:
+      
+            # kiểm tra trong json có key 'amenity' hay không
+            if 'amenity' in i['tags']:
+                  
+                  try:
+                        if i['tags']['amenity'] == 'school' or i['tags']['amenity'] == 'kindergarten' or i['tags']['amenity'] == 'university':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']),'type':'school'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']),'type':'school'})
+                  except:
+                        # no detail
+                        pass
+                        
+                  try:
+                        if i['tags']['amenity'] == 'marketplace':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'market'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'market'})
+                  except:
+                        # no detail
+                        pass
+
+                  try:
+                        if i['tags']['amenity'] == 'police':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'police'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'police'})
+                  except:
+                        # no detail
+                        pass
+            if 'shop' in i['tags']:
+                  try:
+                        if i['tags']['shop'] == 'supermarket':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'superMarket'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'superMarket'})
+                  except:
+                        # no detail
+                        pass
+            if 'highway' in i['tags']:
+                  try:
+                        if i['tags']['highway'] == 'bus_stop':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'busStop'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'busStop'})
+                  except:
+                        # no detail
+                        pass
+            if 'natural' in i['tags']:
+                  try:
+                        if i['tags']['natural'] == 'water':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'lake'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'lake'})
+                  except:
+                        # no detail
+                        pass
+            if 'leisure' in i['tags']:
+                  try:
+                        if i['tags']['leisure'] == 'park':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'park'})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'park'})
+                  except:
+                        # no detail
+                        pass
+      return json_result
 
 app = FastAPI()
 
@@ -135,16 +212,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
       response = requests.get(overpass_url, 
                               params={'data': overpass_query})
       data = response.json()
-      data_json = []
-      for name in data['elements']:
-            try:
-                  data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['lat'],name['lon']),'type' : name['tags']['amenity']})
-            except:
-                  try:
-                        data_json.append({'name' : name['tags']['name'],'distance' : calculator_distance(lat,lon,name['center']['lat'],name['center']['lon']), 'type' : name['tags']['shop']})
-                  except:
-                        pass
-      return data
+      return fillter_json(data['elements'],lat,lon)
       
 
       
