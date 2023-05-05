@@ -59,9 +59,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['amenity'] == 'school' or i['tags']['amenity'] == 'kindergarten' or i['tags']['amenity'] == 'university':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']),'type':'school'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']),'type':'school','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']),'type':'school'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']),'type':'school','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
@@ -69,9 +69,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['amenity'] == 'marketplace':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'market'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'market','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'market'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'market','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
@@ -79,9 +79,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['amenity'] == 'police':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'police'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'police','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'police'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'police','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
@@ -89,9 +89,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['shop'] == 'supermarket':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'superMarket'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'superMarket','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'superMarket'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'superMarket','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
@@ -99,9 +99,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['highway'] == 'bus_stop':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'busStop'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'busStop','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'busStop'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'busStop','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
@@ -109,9 +109,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['natural'] == 'water':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'lake'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'lake','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'lake'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'lake','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
@@ -119,9 +119,9 @@ def fillter_json(data,lat,lon):
                   try:
                         if i['tags']['leisure'] == 'park':
                               try:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'park'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'park','lat':i['lat'],'lon':i['lon']})
                               except:
-                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'park'})
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'park','lat':i['center']['lat'],'lon':i['center']['lon']})
                   except:
                         # no detail
                         pass
