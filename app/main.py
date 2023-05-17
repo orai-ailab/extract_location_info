@@ -253,7 +253,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
       return fillter_json(data['elements'],lat,lon)
       
 # Endpoint của Long :v
-@app.get("//findpublicfacilities//v2")
+@app.get("//findpublicfacilitiesv2")
 async def findpublicfacilities(lat: float, lon: float, distance: int):
       
       overpass_url = "http://65.109.112.52/api/interpreter"
