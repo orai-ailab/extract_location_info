@@ -126,6 +126,44 @@ def fillter_json(data,lat,lon):
                         # no detail
                         pass
       return json_result
+def get_value(data, attr):
+      try:
+            return data[attr]
+      except:
+            return None
+
+def fillter_json_v2(data,lat,lon):
+      json_result = []
+      for i in data:
+            try:
+                  name = i['tags']['operator']
+            except KeyError:
+                  try:
+                        name = i['tags']['name']
+                  except KeyError:
+                        try:
+                              name = i['tags']['brand']
+                        except KeyError:
+                              try:
+                                    name = i['tags']['name:en']
+                              except KeyError:
+                                    name = i['tags']['amenity'].upper()
+
+            try:
+                  lat_ = i['lat']
+                  lon_ = i['lon']
+            except KeyError:
+                  lat_ = i['center']['lat']
+                  lon_ = i['center']['lon']
+            
+            json_result.append({'name': name, 'distance': calculator_distance(lat, lon, lat_, lon_),'lat': lat_, 'lon':lon_, 'type': i['tags']['amenity']})
+      
+      return json_result
+
+
+
+
+
 
 app = FastAPI()
 
@@ -214,6 +252,32 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
       data = response.json()
       return fillter_json(data['elements'],lat,lon)
       
+# Endpoint của Long :v
+@app.get("//findpublicfacilities//v2")
+async def findpublicfacilities(lat: float, lon: float, distance: int):
+      
+      overpass_url = "http://65.109.112.52/api/interpreter"
+      keys = ["university", "fuel", "cafe", "parking", "parking_entrance", "fast_food", "marketplace", "restaurant",
+                         "hospital", "school", "kindergarten", "townhall", " community_centre", "police", "place_of_worship", "bank", "atm"] 
+      overpass_query = f"""
+      [out:json];
+      (
+      """
+      for key in keys:
+            overpass_query += f"""
+            node["amenity"="{key}"](around:{distance},{lat},{lon});
+            way["amenity"="{key}"](around:{distance},{lat},{lon});
+            rel["amenity"="{key}"](around:{distance},{lat},{lon});
+            """
+      overpass_query += f"""
+      );
+      out center;
+      """
+      response = requests.get(overpass_url,
+                              params={'data': overpass_query})
+      data = response.json()
+      return fillter_json_v2(data['elements'],lat,lon)
+
 
       
 
@@ -270,4 +334,41 @@ async def findwayv2(lat: float = Form(), lon: float = Form() ,google_api_key: st
       return data
 
 
-      
+@app.post("//get_detail_way")
+async def get_detail_way(lat: float = Form(), lon: float = Form() ,distance: int = Form()):
+      location = [lat,lon]
+      overpass_url = "http://65.109.112.52/api/interpreter"
+      overpass_query = f"""
+      [out:json];
+      way(around:{distance}, """+str(lat)+","+str(lon)+""")["highway"];
+      (._;>;);
+      out;
+      """
+      response = requests.get(overpass_url,
+                              params={'data': overpass_query})
+      data = response.json()
+
+      data_way = []
+      for way in data["elements"]:
+            if way["type"] == "way":
+                  data_way.append(way)
+      data_node = []
+      for node in data["elements"]:
+            if node["type"] == "node":
+                  data_node.append(node)
+      list_result = []
+      for way in data_way:
+            try:
+                  list_result.append(extract_way(way, location, data_node))
+            except:
+                  pass
+      list_result.sort(key=lambda x: x[2])
+      json_result = []
+      for i in list_result:
+
+            # remove frame 'name' in i[3]
+            i[3].pop('name')
+            
+            frame = ({'name' : i[0], 'length_way' : i[1], 'distance' : i[2], 'detail' : i[3]})
+            json_result.append(frame)
+      return json_result
