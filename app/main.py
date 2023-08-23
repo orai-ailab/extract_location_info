@@ -85,6 +85,15 @@ def fillter_json(data,lat,lon):
                   except:
                         # no detail
                         pass
+                  try:
+                        if i['tags']['amenity'] == 'hospital':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'hospital','lat':i['lat'],'lon':i['lon']})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'hospital','lat':i['center']['lat'],'lon':i['center']['lon']})
+                  except:
+                        # no detail
+                        pass
             if 'shop' in i['tags']:
                   try:
                         if i['tags']['shop'] == 'supermarket':
@@ -125,6 +134,27 @@ def fillter_json(data,lat,lon):
                   except:
                         # no detail
                         pass
+            if 'tourism' in i['tags']:
+                  try:
+                        if i['tags']['tourism'] == 'hotel':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'hotel','lat':i['lat'],'lon':i['lon']})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'hotel','lat':i['center']['lat'],'lon':i['center']['lon']})
+                  except:
+                        # no detail
+                        pass
+            if 'building' in i['tags']:
+                  try:
+                        if i['tags']['building'] == 'apartments':
+                              try:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['lat'],i['lon']), 'type':'apartments','lat':i['lat'],'lon':i['lon']})
+                              except:
+                                    json_result.append({'name' : i['tags']['name'], 'distance' : calculator_distance(lat,lon,i['center']['lat'],i['center']['lon']), 'type':'apartments','lat':i['center']['lat'],'lon':i['center']['lon']})
+                  except:
+                        # no detail
+                        pass
+                  
       return json_result
 def get_value(data, attr):
       try:
@@ -278,7 +308,69 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
       data = response.json()
       return fillter_json_v2(data['elements'],lat,lon)
 
+# Endpoint của Ngân :v
+@app.get("//findpublicfacilitiesv3")
+async def findpublicfacilities(address: str, distance: int):
 
+      url = f"https://nominatim.openstreetmap.org/search?q={address}&format=jsonv2&accept-language=vi&countrycodes=VN"
+
+      payload={}
+      headers = {}
+
+      response = requests.request("GET", url, headers=headers, data=payload).json()
+      
+      if len(response) == 0:
+            return {"message": "Không tìm thấy địa chỉ"}
+      else:
+            lat = float(response[0]['lat'])
+            lon = float(response[0]['lon'])
+      
+      overpass_url = "http://65.109.112.52/api/interpreter"
+      overpass_query = f"""
+            [out:json];
+            (
+            node["amenity"="school"](around:{distance},{lat},{lon});
+            way["amenity"="school"](around:{distance},{lat},{lon});
+            rel["amenity"="school"](around:{distance},{lat},{lon});
+            node["amenity"="kindergarten"](around:{distance},{lat},{lon});
+            way["amenity"="kindergarten"](around:{distance},{lat},{lon});
+            rel["amenity"="kindergarten"](around:{distance},{lat},{lon});
+            node["amenity"="university"](around:{distance},{lat},{lon});
+            way["amenity"="university"](around:{distance},{lat},{lon});
+            rel["amenity"="university"](around:{distance},{lat},{lon});
+            node["highway"="bus_stop"](around:{distance},{lat},{lon});
+            node["amenity"="marketplace"](around:{distance},{lat},{lon});
+            way["amenity"="marketplace"](around:{distance},{lat},{lon});
+            rel["amenity"="marketplace"](around:{distance},{lat},{lon});
+            node["shop"="supermarket"](around:{distance},{lat},{lon});
+            way["shop"="supermarket"](around:{distance},{lat},{lon});
+            rel["shop"="supermarket"](around:{distance},{lat},{lon});
+            node["natural"="water"](around:{distance},{lat},{lon});
+            way["natural"="water"](around:{distance},{lat},{lon});
+            rel["natural"="water"](around:{distance},{lat},{lon});
+            node["leisure"="park"](around:{distance},{lat},{lon});
+            way["leisure"="park"](around:{distance},{lat},{lon});
+            rel["leisure"="park"](around:{distance},{lat},{lon});
+            node["amenity"="police"](around:{distance},{lat},{lon});
+            way["amenity"="police"](around:{distance},{lat},{lon});
+            rel["amenity"="police"](around:{distance},{lat},{lon});
+            node["tourism"="hotel"](around:{distance},{lat},{lon});
+            way["tourism"="hotel"](around:{distance},{lat},{lon});
+            rel["tourism"="hotel"](around:{distance},{lat},{lon});
+            node["amenity"="hospital"](around:{distance},{lat},{lon});
+            way["amenity"="hospital"](around:{distance},{lat},{lon});
+            rel["amenity"="hospital"](around:{distance},{lat},{lon});
+            
+            node["building"="apartments"](around:{distance},{lat},{lon});
+            way["building"="apartments"](around:{distance},{lat},{lon});
+            rel["building"="apartments"](around:{distance},{lat},{lon});
+            );
+            out center;
+      """
+      response = requests.get(overpass_url,
+                              params={'data': overpass_query})
+      data = response.json()
+      return fillter_json(data['elements'],lat,lon)
       
 
 
