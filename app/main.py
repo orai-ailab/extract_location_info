@@ -155,6 +155,21 @@ def fillter_json(data,lat,lon):
                         # no detail
                         pass
                   
+      #return json_result
+      # mỗi loại địa điểm chỉ lấy 5 địa điểm gần nhất
+      dict_result = {}
+      for i in json_result:
+            if i['type'] not in dict_result:
+                  dict_result[i['type']] = [i]
+            else:
+                  dict_result[i['type']].append(i)
+      for i in dict_result:
+            dict_result[i].sort(key=lambda x: x['distance'])
+            dict_result[i] = dict_result[i][0:5]
+      json_result = []
+      for i in dict_result:
+            for j in dict_result[i]:
+                  json_result.append(j)
       return json_result
 def get_value(data, attr):
       try:
@@ -281,6 +296,7 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
                               params={'data': overpass_query})
       data = response.json()
       return fillter_json(data['elements'],lat,lon)
+      
       
 # Endpoint của Long :v
 @app.get("//findpublicfacilitiesv2")
