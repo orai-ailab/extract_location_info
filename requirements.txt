@@ -2,3 +2,5 @@ fastapi
 requests
 uvicorn
 python-multipart
+pymongo
+python-dotenv
