@@ -301,19 +301,21 @@ async def findpublicfacilities(lat: float, lon: float, distance: int):
       data = response.json()
       return fillter_json(data['elements'],lat,lon)
       
-@app.get("//v2/findpublicfacilities")
+@app.get("//findpublicfacilities_v2.0.1")
 async def findpublicfacilities_v2(slug: str):
+      
+      client = MongoClient(URL_MONGODB)
+      db = client['neststock']
+      collection = db['publicfacilities']
+      data_v2 = collection.find({'slug': slug})
+      # chỉ lấy key 'publicfacilities' trong data_v2
       try:
-            client = MongoClient(URL_MONGODB)
-            db = client['neststock']
-            collection = db['publicfacilities']
-            data_v2 = collection.find({'slug': slug})
-            # chỉ lấy key 'publicfacilities' trong data_v2
             data_v2 = data_v2[0]['publicfacilities']
-            client.close()
-            return data_v2
       except:
-            return []
+            data_v2 = []
+      client.close()
+      return data_v2
+     
       
 # Endpoint của Long :v
 @app.get("//findpublicfacilitiesv2")
